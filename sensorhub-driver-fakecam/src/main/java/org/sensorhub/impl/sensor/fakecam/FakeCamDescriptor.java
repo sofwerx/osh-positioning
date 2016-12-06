@@ -12,55 +12,26 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.sensorhub.impl.sensor.fakegps;
+package org.sensorhub.impl.sensor.fakecam;
 
 import org.sensorhub.api.module.IModule;
 import org.sensorhub.api.module.IModuleProvider;
 import org.sensorhub.api.module.ModuleConfig;
+import org.sensorhub.impl.module.JarModuleProvider;
 
 
-public class FakeGpsModuleDescriptor implements IModuleProvider
+public class FakeCamDescriptor extends JarModuleProvider implements IModuleProvider
 {
-
-    @Override
-    public String getModuleName()
-    {
-        return "Simulated GPS Sensor";
-    }
-
-
-    @Override
-    public String getModuleDescription()
-    {
-        return "Sensor outputing simulated GPS sensor data generated from Google Directions results";
-    }
-
-
-    @Override
-    public String getModuleVersion()
-    {
-        return "0.1";
-    }
-
-
-    @Override
-    public String getProviderName()
-    {
-        return "Sensia Software LLC";
-    }
-
-
     @Override
     public Class<? extends IModule<?>> getModuleClass()
     {
-        return FakeGpsSensor.class;
+        return FakeCamSensor.class;
     }
 
 
     @Override
     public Class<? extends ModuleConfig> getModuleConfigClass()
     {
-        return FakeGpsConfig.class;
+        return FakeCamConfig.class;
     }
-
 }
