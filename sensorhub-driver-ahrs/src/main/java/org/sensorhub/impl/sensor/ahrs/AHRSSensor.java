@@ -7,11 +7,9 @@ import org.sensorhub.impl.sensor.AbstractSensorModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vast.sensorML.SMLFactory;
-import org.vast.swe.SWEHelper;
-import net.opengis.sensorml.v20.ClassifierList;
+import org.vast.sensorML.SMLHelper;
 import net.opengis.sensorml.v20.PhysicalSystem;
 import net.opengis.sensorml.v20.SpatialFrame;
-import net.opengis.sensorml.v20.Term;
 
 
 public class AHRSSensor extends AbstractSensorModule<AHRSConfig>
@@ -52,24 +50,15 @@ public class AHRSSensor extends AbstractSensorModule<AHRSConfig>
             super.updateSensorDescription();
 
             SMLFactory smlFac = new SMLFactory();
-            sensorDescription.setDescription("Microstrain Attitude & Heading Reference System - AHRS");
+            if (!sensorDescription.isSetDescription())
+                sensorDescription.setDescription("Microstrain Attitude & Heading Reference System - AHRS");
 
-            ClassifierList classif = smlFac.newClassifierList();
-            sensorDescription.getClassificationList().add(classif);
-            Term term;
+            // add identifiers
+            SMLHelper helper = new SMLHelper(sensorDescription);
+            helper.addManufacturerName("Microstrain");
+            helper.addModelNumber("3DM-GX2");
 
-            term = smlFac.newTerm();
-            term.setDefinition(SWEHelper.getPropertyUri("Manufacturer"));
-            term.setLabel("Manufacturer Name");
-            term.setValue("Microstrain");
-            classif.addClassifier(term);
-
-            term = smlFac.newTerm();
-            term.setDefinition(SWEHelper.getPropertyUri("ModelNumber"));
-            term.setLabel("Model Number");
-            term.setValue("3DM-GX2");
-            classif.addClassifier(term);
-
+            // define mechanical frame
             SpatialFrame localRefFrame = smlFac.newSpatialFrame();
             localRefFrame.setId(CRS_ID);
             localRefFrame.setOrigin("Position of Accelerometers (as marked on the plastic box of the device)");
