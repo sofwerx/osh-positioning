@@ -14,17 +14,14 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.sensorhub.impl.sensor.mti;
 
-import net.opengis.sensorml.v20.IdentifierList;
 import net.opengis.sensorml.v20.PhysicalSystem;
 import net.opengis.sensorml.v20.SpatialFrame;
-import net.opengis.sensorml.v20.Term;
 import org.sensorhub.api.comm.ICommProvider;
 import org.sensorhub.api.common.SensorHubException;
 import org.sensorhub.impl.sensor.AbstractSensorModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vast.sensorML.SMLFactory;
-import org.vast.swe.SWEHelper;
+import org.vast.sensorML.SMLHelper;
 
 
 /**
@@ -72,26 +69,16 @@ public class MtiSensor extends AbstractSensorModule<MtiConfig>
         {
             super.updateSensorDescription();
             
-            SMLFactory smlFac = new SMLFactory();
-            sensorDescription.setDescription("XSens MTi Inertial Motion Unit");
+            if (!sensorDescription.isSetDescription())
+                sensorDescription.setDescription("XSens MTi Inertial Motion Unit");
             
-            IdentifierList identifiers = smlFac.newIdentifierList();
-            sensorDescription.getIdentificationList().add(identifiers);
-            Term term;
+            // add identifiers
+            SMLHelper helper = new SMLHelper(sensorDescription);
+            helper.addManufacturerName("XSens");
+            helper.addModelNumber("MTi");
             
-            term = smlFac.newTerm();
-            term.setDefinition(SWEHelper.getPropertyUri("Manufacturer"));
-            term.setLabel("Manufacturer Name");
-            term.setValue("XSens");
-            identifiers.addIdentifier2(term);
-            
-            term = smlFac.newTerm();
-            term.setDefinition(SWEHelper.getPropertyUri("ModelNumber"));
-            term.setLabel("Model Number");
-            term.setValue("MTi 28A53G35");
-            identifiers.addIdentifier2(term);
-            
-            SpatialFrame localRefFrame = smlFac.newSpatialFrame();
+            // add mechanical frame
+            SpatialFrame localRefFrame = helper.newSpatialFrame();
             localRefFrame.setId(CRS_ID);
             localRefFrame.setOrigin("Position of Accelerometers (as marked on the plastic box of the device)");
             localRefFrame.addAxis("X", "The X axis is in the plane of the aluminum mounting plate, parallel to the serial connector (as marked on the plastic box of the device)");
